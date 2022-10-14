@@ -127,12 +127,12 @@ app.post('/todo/delete', async (req, res) => {
   const listName = req.body.listName;
 
   if (listName == 'Today') {
-    await Item.findByIdAndDelete(checkedItemId, (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
-  
+    try {
+      await Item.findByIdAndDelete(checkedItemId)
+    } catch (err) {
+      console.log(err)
+    }
+    
     res.redirect('/todo');
   } else {
     List.findOneAndUpdate({name: listName}, {$pull: {items: {_id: checkedItemId}}}, async (err, list) => {
